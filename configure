@@ -178,7 +178,9 @@ External library support:
   --enable-librtmp         enable RTMP[E] support via librtmp [no]
   --enable-libschroedinger enable Dirac support via libschroedinger [no]
   --enable-libspeex        enable Speex decoding via libspeex [no]
-  --enable-libstagefright-h264  enable H.264 decoding via libstagefright [no]
+  --enable-libstagefright  enable libstagefright [no]
+  --enable-libstagefright-h264 enable H.264 decoding via libstagefright [no]
+  --enable-libstagefright-adev enable audio device capture via libstagefright [no]
   --enable-libtheora       enable Theora encoding via libtheora [no]
   --enable-libvo-aacenc    enable AAC encoding via libvo-aacenc [no]
   --enable-libvo-amrwbenc  enable AMR-WB encoding via libvo-amrwbenc [no]
@@ -1000,7 +1002,9 @@ CONFIG_LIST="
     librtmp
     libschroedinger
     libspeex
+    libstagefright
     libstagefright_h264
+    libstagefright_adev
     libtheora
     libvo_aacenc
     libvo_amrwbenc
@@ -1465,7 +1469,7 @@ libopenjpeg_decoder_deps="libopenjpeg"
 libschroedinger_decoder_deps="libschroedinger"
 libschroedinger_encoder_deps="libschroedinger"
 libspeex_decoder_deps="libspeex"
-libstagefright_h264_decoder_deps="libstagefright_h264"
+libstagefright_h264_decoder_deps="libstagefright libstagefright_h264"
 libtheora_encoder_deps="libtheora"
 libvo_aacenc_encoder_deps="libvo_aacenc"
 libvo_amrwbenc_encoder_deps="libvo_amrwbenc"
@@ -1515,6 +1519,7 @@ dv1394_indev_deps="dv1394 dv_demuxer"
 fbdev_indev_deps="linux_fb_h"
 jack_indev_deps="jack_jack_h"
 libdc1394_indev_deps="libdc1394"
+libstagefright_audio_indev_deps="libstagefright libstagefright_adev"
 oss_indev_deps_any="soundcard_h sys_soundcard_h"
 oss_outdev_deps_any="soundcard_h sys_soundcard_h"
 sndio_indev_deps="sndio_h"
@@ -2949,8 +2954,9 @@ enabled libopenjpeg && require libopenjpeg openjpeg.h opj_version -lopenjpeg
 enabled librtmp    && require_pkg_config librtmp librtmp/rtmp.h RTMP_Socket
 enabled libschroedinger && require_pkg_config schroedinger-1.0 schroedinger/schro.h schro_init
 enabled libspeex   && require  libspeex speex/speex.h speex_decoder_init -lspeex
-enabled libstagefright_h264  && require_cpp libstagefright_h264 "binder/ProcessState.h media/stagefright/MetaData.h
+enabled libstagefright  && require_cpp libstagefright "binder/ProcessState.h media/stagefright/MetaData.h
     media/stagefright/MediaBufferGroup.h media/stagefright/MediaDebug.h media/stagefright/MediaDefs.h
+    media/AudioRecord.h
     media/stagefright/OMXClient.h media/stagefright/OMXCodec.h" android::OMXClient -lstagefright -lmedia -lutils -lbinder
 enabled libtheora  && require  libtheora theora/theoraenc.h th_info_init -ltheoraenc -ltheoradec -logg
 enabled libvo_aacenc && require libvo_aacenc vo-aacenc/voAAC.h voGetAACEncAPI -lvo-aacenc
@@ -3232,7 +3238,9 @@ echo "libopenjpeg enabled       ${libopenjpeg-no}"
 echo "librtmp enabled           ${librtmp-no}"
 echo "libschroedinger enabled   ${libschroedinger-no}"
 echo "libspeex enabled          ${libspeex-no}"
+echo "libstagefright enabled    ${libstagefright-no}"
 echo "libstagefright-h264 enabled    ${libstagefright_h264-no}"
+echo "libstagefright-adev enabled    ${libstagefright_adev-no}"
 echo "libtheora enabled         ${libtheora-no}"
 echo "libvo-aacenc support      ${libvo_aacenc-no}"
 echo "libvo-amrwbenc support    ${libvo_amrwbenc-no}"
